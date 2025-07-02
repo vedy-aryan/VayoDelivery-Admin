@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Date;
 import java.util.Map;
 
 @Controller
@@ -22,6 +23,7 @@ public class OrderController {
         Map<String, Order> allOrders = orderService.getAllOrders();
         model.addAttribute("orders", allOrders); // Used for both tables
         model.addAttribute("drones", orderService.getAllDrones().keySet());
+        model.addAttribute("currentTime", new Date()); // ✅ Add current time
         return "admin_panel";
     }
 
