@@ -85,4 +85,31 @@ public class OrderService {
     }
 
 
+    public Map<String, Order> getAllOrders() {
+        CompletableFuture<Map<String, Order>> future = new CompletableFuture<>();
+
+        ordersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            public void onDataChange(DataSnapshot snapshot) {
+                Map<String, Order> result = new HashMap<>();
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    Order order = child.getValue(Order.class);
+                    result.put(child.getKey(), order);
+                }
+                future.complete(result);
+            }
+
+            public void onCancelled(DatabaseError error) {
+                future.completeExceptionally(error.toException());
+            }
+        });
+
+        try {
+            return future.get();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyMap();
+        }
+    }
+
+
 }
